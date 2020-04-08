@@ -1,0 +1,32 @@
+{
+  "name": "body-snatchers",
+  "version": "1.0.0",
+  "description": "Get bodies from web pages",
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.2.0"
+  },
+  "authors": [
+    "Adam Quinton"
+  ],
+  "repository": "https://github.com/zvakanaka/body-snatchers",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha || :",
+    "tests-web-server": "http-server --silent -p 7777 test/pages &",
+    "pretest": "npm run tests-web-server",
+    "posttest": "pkill -f http-server"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "http-server": "^0.12.1",
+    "mocha": "^7.1.1"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^2.6.0",
+    "puppeteer": "^2.1.1",
+    "sequential-promise-all": "^1.0.2"
+  }
+}
