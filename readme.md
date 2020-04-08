@@ -17,5 +17,5 @@ const bodyStrings = getBodies([
 
 ## Motivation
 * Ease burden on CPU (requests pages one at a time)
-* Work on Raspberry Pi (tested on 2, 3, 4<sup>[*](./blob/master/raspberry-pi-4-instructions.md)</sup>)
+* Work on Raspberry Pi (tested on 2, 3, 4<sup>[*](./raspberry-pi-4-instructions.md)</sup>)
 
