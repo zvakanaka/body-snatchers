@@ -3,15 +3,15 @@ Get bodies from web pages
 ```javascript
 const { getBody } = require('body-snatchers')
 
-const str = getBody('https://news.ycombinator.com/', false)
+const bodyString = getBody('https://news.ycombinator.com/', false)
 ```
 # Multiple bodies
 ```javascript
 const { getBodies } = require('body-snatchers')
 
-const str = getBodies([
+const bodyStrings = getBodies([
   { url: 'https://news.ycombinator.com/' },
-  { url: 'https://google.com/', js: true }
+  { url: 'https://google.com/', js: true } // page that requires JavaScript
 ])
 ```
 
