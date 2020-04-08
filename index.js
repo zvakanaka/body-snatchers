@@ -4,37 +4,46 @@ const puppeteer = require('puppeteer');
 const puppeteerHelper = require('./lib/puppeteerHelper');
 
 module.exports = {
-  getPageBodies,
-  getPageBody,
+  getBodies,
+  getBody,
 };
 
 /**
  * Get multiple page bodies in serial.
  * @param {Object[]} arr Array of objects containing URLs and (optional - defaults false) JS flags (e.g. [{url, js}])
+ * @returns {String[]} Array of body strings
  */
-async function getPageBodies(arr) {
+async function getBodies(arr) {
   let nonJsRequests = [];
   let jsRequests = [];
   arr.forEach((item, i) => {
-    if (item.js || item.javascript) jsRequests.push({ url: item.url, index: i });
-    else nonJsRequests.push(_getPage(item.url, i));
+    if (item.js || item.javascript) {
+      jsRequests.push({ url: item.url, index: i });
+    } else {
+      nonJsRequests.push(_getBody(item.url, i));
+    }
   });
   const nonJsArr = await Promise.all(nonJsRequests);
-  const jsArr = jsRequests.length > 0 ? await _getPagesJavaScript(jsRequests) : [];
+  const jsArr = jsRequests.length > 0 ? await _getBodiesJavaScript(jsRequests) : [];
   const unsortedArr = [...jsArr, ...nonJsArr];
   // sort by original index
   const sortedArr = unsortedArr.sort((a, b) => a.index - b.index);
-  return sortedArr;
+  return sortedArr.map(responseObj => responseObj.body);
 }
 
 /**
  * Get a single page.
  * @param {String} url URL of page
  * @param {Boolean} js Does page require JavaScript?
+ * @return {String} Body string
  */
-async function getPageBody(url, js) {
-  const pageBodies = await getPageBodies([{url, js}]);
-  return pageBodies[0].body;
+async function getBody(url, js) {
+  const pageBodies = await getBodies([{url, js}]);
+  if (Array.isArray(pageBodies) && pageBodies.length === 1) {
+    return pageBodies[0];
+  } else {
+    console.error(`Failed to get page body`);
+  }
 }
 
 /**
@@ -43,7 +52,7 @@ async function getPageBody(url, js) {
  * @param {Object[]} options Array of objects with URL and index (e.g. [{url, index}])
  * @return {Object[]} Array of objects with body, URL, and index (e.g. [{body, url, index}])
  */
-async function _getPagesJavaScript(options) {
+async function _getBodiesJavaScript(options) {
   const notHeadless = process.env.FORCE_NOT_HEADLESS ? process.env.FORCE_NOT_HEADLESS === 'true' : false;
   const launchOptions = {
     headless: !notHeadless
@@ -71,16 +80,18 @@ async function _getPagesJavaScript(options) {
  * Get the page using a simple HTTP request.
  * @param {String} url
  * @param {Number} index
+ * @returns {Object} Object with body, URL, and index (e.g. {body, url, index})
  */
-async function _getPage(url, index) {
-  // TODO: set fetch headers
+async function _getBody(url, index) {
+  // TODO: set fetch headers, or allow setting them from parameter
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, {});
     const body = await res.text();
 
     return {body, url, index};
   } catch (e) {
     console.error(e);
+    console.error(`FETCH FAILURE: could not fetch page ${index}, ${JSON.stringify(url)}`)
     return {body: 'FETCH FAILURE: could not fetch page', url, index};
   }
 }
