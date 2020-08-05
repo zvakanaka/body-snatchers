@@ -1,4 +1,4 @@
-Get bodies from web pages
+Get the HTML text bodies from web pages
 # Get a single body
 ```javascript
 const { getBody } = require('body-snatchers')
