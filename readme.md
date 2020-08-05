@@ -9,7 +9,7 @@ const bodyString = getBody('https://news.ycombinator.com/', false)
 ```javascript
 const { getBodies } = require('body-snatchers')
 
-const bodyStrings = getBodies([
+const bodyStrings = await getBodies([
   { url: 'https://news.ycombinator.com/' },
   { url: 'https://google.com/', js: true } // page that requires JavaScript
 ])
