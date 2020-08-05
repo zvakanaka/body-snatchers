@@ -3,7 +3,7 @@ Get bodies from web pages
 ```javascript
 const { getBody } = require('body-snatchers')
 
-const bodyString = getBody('https://news.ycombinator.com/', false)
+const bodyString = await getBody('https://news.ycombinator.com/', false)
 ```
 # Multiple bodies
 ```javascript
