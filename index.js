@@ -83,9 +83,9 @@ async function _getBodiesJavaScript(options) {
  * @returns {Object} Object with body, URL, and index (e.g. {body, url, index})
  */
 async function _getBody(url, index) {
-  // TODO: set fetch headers, or allow setting them from parameter
+  // TODO: allow setting fetch headers from parameter
   try {
-    const res = await fetch(url, {});
+    const res = await fetch(url, { headers: { 'User-Agent': 'browser' } });
     const body = await res.text();
 
     return {body, url, index};
